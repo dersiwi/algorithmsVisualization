@@ -44,17 +44,18 @@ const pathColor = 'yellow';
 const visited = 'orange';
 
 
-//tells, if a starting location has been set
-var setStarting = false;
+const DrawingMode = {
+    NoDrawing : -1, 
+    SetStartingPoint : 0,
+    SetFinishingPoint : 1,
+    Erase : 2,
+    Draw : 3,
+    LineMode : 4
+}
+const defaultDrawingMode = DrawingMode.Draw;
+var currentDrawingMode = defaultDrawingMode;
+var currentDrawingElementActive = NaN;
 
-//tells, if a finishing location has been set
-var setFinishing = false;
-
-//if erase == true, any sqaure that will be clicked is going to be white again (see mouseOnCnvas)
-var erase = false;
-
-//if true, an obstacle is going to be drawn on the canvas
-var drawOnSquares = true;
 
 //executes the algorithm if true
 var executeAlgorithm = true;
@@ -62,10 +63,7 @@ var executeAlgorithm = true;
 //if true, each iteration of the drawing loop, an algorithm step is executed
 var doAlgorithm = false;
 
-//if activated, the user can set a starting point. The second time he clicks, a line is calculated between the points and drawn on the grid
-var lineMode = false;
-var lineBegin = [-1, -1]
-var lineEnding = [-1, -1]
+
 
 //indicates if the algorithm has finished 
 var algorithmFinished = false;
@@ -120,41 +118,29 @@ buildParentGrid();
 
 //set the starting button
 document.querySelector('#setStarting').onclick = function(){
-    setStarting = true;
-    setFinishing = false;
-    erase = false;
-    drawOnSquares = false;
+    changeDrawingMode(DrawingMode.SetStartingPoint, document.querySelector('#setStarting'));
+
 };
 //set the finishing button
 document.querySelector('#setFinishing').onclick = function(){
-    setFinishing = true;
-    setStarting = false;
-    erase = false;
-    drawOnSquares = false;
+    changeDrawingMode(DrawingMode.SetFinishingPoint, document.querySelector('#setFinishing'));
+
 };
 //activate erase
 document.querySelector('#erase').onclick = function(){
-    setStarting = false;
-    setFinishing = false;
-    erase = true;
-    drawOnSquares = false;
+    changeDrawingMode(DrawingMode.Erase, document.querySelector('#erase'));
 };
 //draw obstacles 
 document.querySelector('#draw').onclick = function(){
-    setStarting = false;
-    setFinishing = false;
-    erase = false;
-    drawOnSquares = true;
+    changeDrawingMode(DrawingMode.Draw, document.querySelector('#draw'));
+    currentDrawingMode = DrawingMode.Draw;
 };
 //calculate algorithm
 document.querySelector('#calculate').onclick = function(){
-    setStarting = false;
-    setFinishing = false;
-    erase = false;
-    drawOnSquares = false;
+    changeDrawingMode(DrawingMode.NoDrawing, document.querySelector('#calculate'));
+
     doAlgorithm = true;
     executeAlgorithm = true;
-
     //see way down
 }
 
@@ -170,7 +156,7 @@ document.querySelector('#clear').onclick = function(){
     resetAlgorithm();
 }
 
-document.querySelector('#stopAlgorithm').onclick = function(){
+document.querySelector('#stopAlgorithm').onclick = function() {
     console.log('Stopped Algorithm');
     executeAlgorithm = false;
 }
@@ -196,23 +182,26 @@ document.querySelector('#resetAlgorithm').onclick = function(){
 }
 
 document.querySelector('#drawLine').onclick = function(){
-    setStarting = false;
-    setFinishing = false;
-    erase = false;
-    drawOnSquares = false;
+    changeDrawingMode(DrawingMode.LineMode, document.querySelector('#drawLine'));
 
-    //toggle line mode
-    if (lineMode){
-        lineMode = false;
-        document.querySelector('#drawLine').style.background = 'white';
-
-    } else{
-        lineMode = true;
-        document.querySelector('#drawLine').style.background = 'green';
-    }
     lineBegin = [-1, -1];
     lineEnding = [-1, -1];
     //see way down
+}
+
+function changeDrawingMode(newDrawingMode, elementToChange){
+    /*
+    if (currentDrawingElementActive != NaN) {
+        currentDrawingElementActive.style.background = 'white';
+    }
+
+    if (newDrawingMode != DrawingMode.NoDrawing){
+        currentDrawingElementActive = elementToChange;
+        elementToChange.style.background = 'green';
+    } 
+    */
+
+    currentDrawingMode = newDrawingMode;
 }
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -263,6 +252,7 @@ function buildGrid(defaultSquareColor='white'){
  *      setStarting
  *      erase
  *      drawOnSqaures
+ *      lineMode
  *
  * It modifies the grid, and then calls the draw function
  * @param {*} event 
@@ -271,44 +261,66 @@ function mouseDownOnCanvas(event){
     position = getMousePositionOnCanvas(event);
     squareIndexes = mapMouseCoordinateToGridSquare(position.x, position.y);
     //alert(squareIndexes[0] + " " + squareIndexes[1]);
-    if (setStarting){
-        //invalidate old starting position
-        if (positionStarting[0] != -1){
-            grid[positionStarting[0]][positionStarting[1]] = squareColor;
-        }
 
-        grid[squareIndexes[1]][squareIndexes[0]] = startPointColor;
-        positionStarting[0] = squareIndexes[1];
-        positionStarting[1] = squareIndexes[0];
-    }
-    else if (setFinishing){
+    switch(currentDrawingMode){
+        case DrawingMode.SetStartingPoint:
+            setStartingPosition(squareIndexes);
+            break;
+        
+        case DrawingMode.SetFinishingPoint:
+            setFinishingPosition(squareIndexes);
+            break;
 
-        if (positionFinishing[0] != -1){
-            grid[positionFinishing[0]][positionFinishing[1]] = squareColor;
-        }
+        case DrawingMode.Erase:
+            grid[squareIndexes[1]][squareIndexes[0]] = squareColor;
+            break;
 
-        grid[squareIndexes[1]][squareIndexes[0]] = finishPointColor;
-        positionFinishing[0] = squareIndexes[1];
-        positionFinishing[1] = squareIndexes[0];
-    }
-    else if (erase){
-        grid[squareIndexes[1]][squareIndexes[0]] = squareColor;
-    }
-    else if (drawOnSquares){
-        grid[squareIndexes[1]][squareIndexes[0]] = obstacleColor;
-    } else if(lineMode){
-        if (lineBegin[0] == -1){
-            lineBegin = [squareIndexes[1], squareIndexes[0]];
+        case DrawingMode.Draw:
             grid[squareIndexes[1]][squareIndexes[0]] = obstacleColor;
-        } else{
-            lineEnding = [squareIndexes[1], squareIndexes[0]];
-            drawLineOnGrid();
-            lineBegin = [-1, -1];
-            lineEnding = [-1, -1];
-            
-        }
+            break;
+
+        case DrawingMode.LineMode:
+            doLineMode(squareIndexes);
+            break;
     }
+
     draw();
+}
+
+function doLineMode(squareIndexes){
+    if (lineBegin[0] == -1){
+        lineBegin = [squareIndexes[1], squareIndexes[0]];
+        grid[squareIndexes[1]][squareIndexes[0]] = obstacleColor;
+    } else{
+        lineEnding = [squareIndexes[1], squareIndexes[0]];
+        drawLineOnGrid();
+        lineBegin = [-1, -1];
+        lineEnding = [-1, -1];
+        
+    }
+}
+
+
+
+function setStartingPosition(squareIndexes){
+    //invalidate old starting position
+    if (positionStarting[0] != -1){
+        grid[positionStarting[0]][positionStarting[1]] = squareColor;
+    }
+
+    grid[squareIndexes[1]][squareIndexes[0]] = startPointColor;
+    positionStarting[0] = squareIndexes[1];
+    positionStarting[1] = squareIndexes[0];
+}
+
+function setFinishingPosition(squareIndexes){
+    if (positionFinishing[0] != -1){
+        grid[positionFinishing[0]][positionFinishing[1]] = squareColor;
+    }
+
+    grid[squareIndexes[1]][squareIndexes[0]] = finishPointColor;
+    positionFinishing[0] = squareIndexes[1];
+    positionFinishing[1] = squareIndexes[0];
 }
 
 /**
@@ -425,7 +437,9 @@ function draw(){
 
 
 
-
+/**
+ * Resets the algorithm in order to re-rexecute it 
+ */
 function resetAlgorithm() {
     queue = [positionStarting];
     pathEndNode = positionFinishing;

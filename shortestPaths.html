@@ -30,7 +30,7 @@
                 <!--This is the ac-->
 
                 <h1>Javascript - Calculating the shortest path</h1>
-                <canvas id="canvas" height="400" width="600">
+                <canvas id="canvas" height="440" width="660">
         
                 </canvas>
                 
@@ -54,10 +54,10 @@
 
                 <h3>Alter square size</h3>
                 <label class="whiteText">Square-Size :</label>
-                <input type="range" min="4" max="30" step="2.0" value="10" id="squareSizeSlider">
-        
+                <form id="sliderData"> 
+                    <input id="squareSizeSlider" type="range" min="3" max="22" value="22">
+                </form>
 
-                
                 <h3>Stop drawing loop (cannot be unstopped)</h3>
                 <button type="button" id="stopDrawingLoop">Stop drawing</button>
 
@@ -66,9 +66,11 @@
                 <p>Breadth first search</p>
         
                 <h2>See also : <a href="SearchingAlgorithms.html">Visualisation of sorting algorithms</a> </h2>
-        
+
+
                 <script src="scripts/shortestPath.js" charset="utf-8"></script>
                 <script src="scripts/shortestPathsListener.js" charset="utf-8"></script>
+                
 
             </div>
 

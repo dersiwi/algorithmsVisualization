@@ -3,7 +3,7 @@ const canvas = document.querySelector('#canvas');
 const ctx = canvas.getContext('2d');
 canvas.addEventListener("mousedown", mouseDownOnCanvas, false);
 
-var squareWidth = 10;
+var squareWidth = 21;
 const squareSpacing = 1;
 var squaresPerRow = calculateSquaresPerRow();
 var amountSquareRows = calculateAmountRows();
@@ -209,7 +209,9 @@ function changeDrawingMode(newDrawingMode, elementToChange){
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 document.querySelector('#squareSizeSlider').addEventListener('change', function(){
-    squareWidth = parseInt(document.querySelector('#squareSizeSlider').value, 10);
+    var values = [3, 9, 10, 19, 21];
+    var minIndex = getValueClosestTo(values, parseInt(document.querySelector('#squareSizeSlider').value, 10));
+    squareWidth = values[minIndex];
     grid = [];
     squaresPerRow = calculateSquaresPerRow(squareWidth);
     amountSquareRows = calculateAmountRows(squareWidth);
@@ -217,6 +219,24 @@ document.querySelector('#squareSizeSlider').addEventListener('change', function(
     buildParentGrid();
 }, false);
 
+/**
+ * Given an array and a value, this function returns an index i such that |array[i] - value| is minimal
+ * @param {*} array 
+ * @param {*} value 
+ * @returns 
+ */
+function getValueClosestTo(array, value){
+    var distance = 1000;
+    var valueIndex = -1;
+    for (i = 0; i < array.length; i++){
+        var currDistance = Math.abs(array[i] - value);
+        if (currDistance < distance){
+            distance = currDistance;
+            valueIndex = i;
+        }
+    }
+    return valueIndex;
+}
 
 //<button type="button" id="stopAlgorithm">Stop Algorithm</button>
 //<button type="button" id="resumeAlgorithm">Resume Algorithm</button>
@@ -534,8 +554,9 @@ function visitNode(nodeY, nodeX, xDirection, yDirection){
  */
 function drawPathBackwards(){
     //draw the path from the goal node to the beginning node
-    if (grid[pathEndNode[0]][pathEndNode[1]] != startPointColor) {
+    
+    if (pathEndNode[0] >= 0 && pathEndNode[0] >= 0 && grid[pathEndNode[0]][pathEndNode[1]] != startPointColor) {
         grid[pathEndNode[0]][pathEndNode[1]] = pathColor;
         pathEndNode = parentGrid[pathEndNode[0]][pathEndNode[1]];
-    }
+    } 
 }

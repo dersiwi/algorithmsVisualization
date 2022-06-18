@@ -18,18 +18,6 @@ const scramblingIterations = 100;
 const visited = 'orange';
 
 
-//tells, if a starting location has been set
-var setStarting = false;
-
-//tells, if a finishing location has been set
-var setFinishing = false;
-
-//if erase == true, any sqaure that will be clicked is going to be white again (see mouseOnCnvas)
-var erase = false;
-
-//if true, an obstacle is going to be drawn on the canvas
-var drawOnSquares = true;
-
 //executes the algorithm if true
 var executeAlgorithm = true;
 
@@ -116,10 +104,12 @@ document.querySelector('#bogoSort').onclick = function(){
 }
 
 
-document.querySelector('#applySettings').onclick = function(){
-    amountBars = document.querySelector('#amountBars').value;
+document.querySelector('#amountBarSlider').addEventListener('change', function(){
+    amountBars = parseInt(document.querySelector('#amountBarSlider').value, 10);
     setup(amountBars);
-}
+
+}, false);
+
 
 
 //<button type="button" id="stopAlgorithm">Stop Algorithm</button>

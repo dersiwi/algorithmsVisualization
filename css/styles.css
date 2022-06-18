@@ -104,3 +104,7 @@ nav{
       pointer-events: none;
     }
   }
+
+  .centerText{
+    text-align: center;
+  }

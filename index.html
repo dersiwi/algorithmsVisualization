@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="section">
+            <div class="top_navbar">
+                <div class="hamburger">
+                    <a href="#">
+                        <i class="fas fa-bars"></i>
+                    </a>
+                </div>
+            </div>
+
+
+            <h1>Hello and welcome to my ass</h1>
+            <p class="whiteText">I built this website in order to visualize graphs, that find shortest paths and sorting algorithms.</p>
+            <p class="whiteText">Besides visusaizing them, i also wanted to provide a quick introcution into how they work.</p>
+            <p class="whiteText">Of course, in order to explain how shortest-path algorithms work i also wrote a quick introduction into graph theory.</p>
+            <p class="whiteText">This introduction however is very basic and short, just to explain the simplest termns</p>
+
+            <p class="whiteText">Finally, i also want to cover the basics of runtime-analysis, so that the user can assume the speed of the algorithms, when applied on a large scale</p>
+
+            <h2>Disclaimer</h2>
+            <p class="whiteText">
+                This website and interface was built for fun. If something doesn't work - for example executing multiple sorting algorithms back to back, each on a different
+                amount of bars (different n) - : <b>reload the website</b>. 
+            </p>
+            <p class="whiteText">
+                The website and managing scripts are far from error-resistant and it is very possible i forgot something, was too lazy to implement it or just implemented a bug.
+            </p>
+            <p class="whiteText">
+                On this note, have fun and explore some algorithms :)
+            </p>
+
+        </div>
+        <!--Top menu -->
+        <div class="sidebar">
+           <!--profile image & text-->
+            <!--menu item-->
+            <div class="profile">
+                <!--
+                <img src="https://1.bp.blogspot.com/-vhmWFWO2r8U/YLjr2A57toI/AAAAAAAACO4/0GBonlEZPmAiQW4uvkCTm5LvlJVd_-l_wCNcBGAsYHQ/s16000/team-1-2.jpg" alt="profile_picture">
+                -->
+                <h3>Simon Wilhelm Schübel</h3>
+                <p>Spacko</p>
+                <ul>
+                    <li>
+                        <a href="home.html" class="active">
+                            <span class="item">Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="shortestPaths.html">
+                            <span class="item">Shortest Path</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="sorting.html">
+                            <span class="item">Sorting</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="development.html">
+                            <span class="item">Development</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="item">Contact</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+            </div>
+        </div>
+
+    </div>
+  <script>
+        document.querySelector("body").classList.toggle("active");
+
+        var hamburger = document.querySelector(".hamburger");
+        hamburger.addEventListener("click", function(){
+            document.querySelector("body").classList.toggle("active");
+        })
+  </script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+
+/*
+Colors: 
+#1B2430
+#51557E
+#816797
+#D6D5A8
+*/
+
+body{
+    background-color: #1B2430;
+}
+h1{
+    /*font-family: 'Lobster', cursive;*/
+    font-size: 3rem;
+    color: #4ECCA3;
+}
+h2{
+    font-size: 2rem;
+    color: #4ECCA3;
+}
+
+h3{
+    color: #4ECCA3;
+}
+
+
+h4{
+    color: #4ECCA3;
+}
+
+a{
+    color: #4ECCA3;
+}
+
+.container{
+    text-align: center;
+    position: relative;
+}
+
+.dice{
+    display: inline-block;
+    text-align: center;
+}
+
+
+nav{
+    background: black;
+    color: white;
+    height:56px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+  }
+  
+  .container {
+    display: flex;
+  }
+  
+  aside {
+    height: 100vh;
+    background: gray;
+    width: 20%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 60px;
+    color: white;
+    z-index: -1;
+    overflow: scroll;
+  }
+  main {
+    width: 80%;
+    margin-left: 20%;
+    margin-top:56px;
+  }
+  
+  .pre-toolbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: red;
+    height: 20px;
+    width: 100%;
+    z-index: 9;
+    animation: fadeOut 1s 5s forwards;
+  }
+
+  .whiteText{
+    color : white;
+  }
+  
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    100% {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }

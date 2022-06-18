@@ -1,0 +1,46 @@
+- Shortest Paths
+
+    --Implement an interface, such that you can draw any color on the grid
+        This color is then the weight of the node, the closer the color to black is, the "heavier" the node is, 
+        the more difficult it is to travel through : 
+        weight(color) = dist(rgb(color), (0,0,0)) =sqrt(red + green + blue)
+
+    --Implement a function to store a drawn grid
+        starting and enpoint can be set again, without having to redraw the entire grid
+
+    --Implement a reset function
+        This function should reset the grid, same as reloading the page does
+    
+    --Implement other algorithms
+        -Djikstra
+        -DFS
+        -A*
+        -Bellman Ford (? maybe)
+
+    --Implement a slider (similar to the one described for shortest paths) which lets a user alter the square-size
+
+    --Implement lineDraw-mode
+
+
+-Sorting algorithms
+
+    --Make the interface prettier, which lets a user change the amount of bars to Sorting
+        Maybe a slider would be nice:
+        0----|--100
+        The position of the slider translates to the amounf of bars 
+    
+    --Maybe give the user a possiblity to enter a set of numbers and sort them with his favourite algorithm
+
+
+-General
+
+    --Add home to homepage
+    --Make interfacees for both algorithm-calsses prettier
+        Change button layouts
+        Button design
+        Colorpallets
+    
+    --Different Languages: 
+        Maybe support an english (default) and a german version, maybe even a spanish one, in order to practice a little bit lol
+
+    

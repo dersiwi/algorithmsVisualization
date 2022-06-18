@@ -19,7 +19,13 @@
 
     --Implement a slider (similar to the one described for shortest paths) which lets a user alter the square-size
 
-    --Implement lineDraw-mode
+    --Implement lineDraw-mode   
+        Draw Diagonal Lines 
+    
+    --Other drawing modes
+        Draw Rectangle
+        Draw Circle
+
 
 
 -Sorting algorithms

@@ -11,12 +11,24 @@ var amountSquareRows = calculateAmountRows();
 //alert(amountSquareRows);
 
 function calculateSquaresPerRow(newSquareWidth = squareWidth){
-    return Math.floor(canvas.width / (squareWidth + squareSpacing));
+    return Math.floor(canvas.width / (newSquareWidth + squareSpacing));
 }
 
 function calculateAmountRows(newSquareWidth = squareWidth){
     console.log("Amount square rows : " + canvas.height + "/" + (newSquareWidth + squareSpacing) + " = "  + Math.floor(canvas.height / (newSquareWidth + squareSpacing)));
     return Math.floor(canvas.height / (newSquareWidth + squareSpacing));
+}
+
+
+/**
+ * Coordinate class is mainly used for storing indexes of a square in the grid.
+ * So the way to interpret coordiantes 
+ */
+class Coordinate{
+    constructor(gridIndexX, gridIndexY){
+        this.x = gridIndexX;
+        this.y = gridIndexY;
+    }
 }
 
 var positionStarting = [-1, 0];
@@ -55,6 +67,11 @@ var lineMode = false;
 var lineBegin = [-1, -1]
 var lineEnding = [-1, -1]
 
+//indicates if the algorithm has finished 
+var algorithmFinished = false;
+
+//indicates if the path has been drawn
+var pathDrawingFinished = false;
 
 
 /**
@@ -63,7 +80,11 @@ var lineEnding = [-1, -1]
 var drawingIntevalID = setInterval(function(){
     draw();
     if (doAlgorithm && executeAlgorithm){
-        doAlgorithmStepBFS();
+        if (!algorithmFinished){
+            doAlgorithmStepBFS();
+        } else{
+            drawPathBackwards();
+        }
     }
 }, 10);
 
@@ -93,8 +114,10 @@ buildGrid();
 buildParentGrid();
 //resetAlgorithm();
 
-
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------button listener 
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+
 //set the starting button
 document.querySelector('#setStarting').onclick = function(){
     setStarting = true;
@@ -158,6 +181,9 @@ document.querySelector('#resumeAlgorithm').onclick = function(){
 }
 
 document.querySelector('#resetAlgorithm').onclick = function(){
+    /**
+     * 
+     */
     for (row = 0; row < grid.length; row++){
         for (column = 0; column < grid[row].length; column++){
             if (grid[row][column] == pathColor || grid[row][column] == visited){
@@ -189,8 +215,9 @@ document.querySelector('#drawLine').onclick = function(){
     //see way down
 }
 
-
-//----------------------------slider listener
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------button listener 
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 document.querySelector('#squareSizeSlider').addEventListener('change', function(){
     squareWidth = parseInt(document.querySelector('#squareSizeSlider').value, 10);
@@ -223,6 +250,10 @@ function buildGrid(defaultSquareColor='white'){
     }
 }
 
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------gird-interaction
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 /**
@@ -280,6 +311,11 @@ function mouseDownOnCanvas(event){
     draw();
 }
 
+/**
+ * Draw a line on the grid 
+ * Given a starting point (lineBegin) and an endpoint (lineEnding), 
+ * the line is drawn by giving every square between these two points a color 
+ */
 function drawLineOnGrid(){
     //draw horizontal line
     if (lineBegin[0] == lineEnding[0]){
@@ -295,62 +331,18 @@ function drawLineOnGrid(){
     }
     //draw diagonal line 
     else{
-        //get the greatest distance of the two distances to travel (vertical and horizontal)
-        //in order to iterate over the greater distance 
-        var iterationBegin = 0;
-        var iterationEnding = 0;
-        var diagonalCounter = 0;
-        if (lineEnding[0] - lineBegin[0] >= lineEnding[1] - lineBegin[1]){
-            iterationBegin = lineBegin[0];
-            iterationEnding = lineEnding[0];
-        } else{
-            iterationBegin = lineBegin[1];
-            iterationEnding = lineEnding[1];
-        }
-        
-        for (i = iterationBegin; i <= iterationEnding; i++){
-            grid[i][diagonalCounter] = obstacleColor;
-            if (diagonalCounter <= lineEnding[1]){
-                diagonalCounter++;
-            }
-        }
-
-
-        var diagonalCounterOne = lineBegin[1];
-        var diagonalCounterTwo = lineBegin[0];
-        for (i = lineBegin[0]; i <= lineEnding[0]; i++){
-            grid[i][diagonalCounterOne] = obstacleColor;
-            if (diagonalCounterOne <= lineEnding[1]){
-                diagonalCounterOne++;
-            }
-        }
-    }
-}
-
-function max(n, m){
-    if (n >= m){
-        return n;
-    }else{
-        return m;
+        //TODO : Implement
     }
 }
 
 
-function min(n, m){
-    if (n <= m){
-        return n;
-    }else{
-        return m;
-    }
-}
 
-
-//------------------------------------------------------------------------
-//------------------------mouse on canvas methods
-//------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------mouse on canvas
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 /**
  * Returns a posiiton object, which contains the position, 
- * of the mouse-click on the canvas
+ * of the mouse-click on the canvas (relative to the canvas upper left corner)
  * @param {*} event 
  * @returns 
  */
@@ -374,9 +366,9 @@ function mapMouseCoordinateToGridSquare(x, y){
     return [sqaureColumn, sqaureRow];
 }
 
-//------------------------------------------------------------------------
-//------------------------drawing methods
-//------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------drawing 
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 /**
  * Draws all sqaures of the grid on the canvas 
@@ -402,12 +394,6 @@ function mapMouseCoordinateToGridSquare(x, y){
 /**
  * Fills a rectangle on ctx with color
  * The upper left corner is (upperX, upperY) 
- * @param {*} ctx 
- * @param {*} upperX 
- * @param {*} upperY 
- * @param {*} width 
- * @param {*} height 
- * @param {*} color 
  */
 function fillRect(ctx, upperX, upperY, width, height, color='white') {
     ctx.fillStyle = color;
@@ -432,32 +418,25 @@ function draw(){
 
 
 
-draw();
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------calculation of shortest Path (BFS) 
+//-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 
-
-//------------------------------------------calculation of shortest path 
-function calculateShortestPath(){
-    if (positionStarting[0] == -1 || grid[positionStarting[0]][positionStarting[1]] != startPointColor){
-        alert("No starting point set.");
-        return;
-    }
-    breitenSuche();
-    intervalDrawing = true;
-}
-
-
-
-
-function resetAlgorithm(){
+function resetAlgorithm() {
     queue = [positionStarting];
     pathEndNode = positionFinishing;
     buildParentGrid();
 }
 
-function buildParentGrid(){
+/**
+ * Builds (setup) the parent grid 
+ * The parent grid stores the parent of each node in the node
+ */
+function buildParentGrid() {
     for ( rows = 0; rows < amountSquareRows; rows++){
         parentGrid[rows] = [];
         for ( columns = 0; columns < squaresPerRow; columns++){
@@ -466,6 +445,15 @@ function buildParentGrid(){
     }
 }
 
+/**
+ * Executes one algorithm step of the bfs 
+ * 
+ * BFS is basically :
+ * 
+ *      while(queue != []){
+ *             doAlgorithmStepBFS();
+ *      }
+ */
 function doAlgorithmStepBFS(){
     if (queue.length > 0){
         currentNode = queue.shift();
@@ -481,18 +469,23 @@ function doAlgorithmStepBFS(){
                 console.log("Found the end node");
                 queue = [];
                 pathEndNode = [nodeY, nodeX];
+                algorithmFinished = true;
             }
 
-    } else{
-        //draw the path from the goal node to the beginning node
-        if (grid[pathEndNode[0]][pathEndNode[1]] != startPointColor) {
-            grid[pathEndNode[0]][pathEndNode[1]] = pathColor;
-            pathEndNode = parentGrid[pathEndNode[0]][pathEndNode[1]];
-        }
-
-    }
+    } 
 }
 
+/**
+ * Visits the node grid[nodeY + YDirection][nodeX + xDirection]
+ * xDirection and yDirection should be  0, 1 or -1
+ * So visit node looks at the top, bottom, left or right neighbour of node 
+ * 
+ * 
+ * If a node is visited it is colored, and its parent added to the parentGrid 
+ * 
+ * 
+ * @returns true, if grid[nodeY + YDirection][nodeX + xDirection] is the finishing node, false if not
+ */
 function visitNode(nodeY, nodeX, xDirection, yDirection){
     neighbourX = nodeX + xDirection;
     neighbourY = nodeY + yDirection;
@@ -519,3 +512,16 @@ function visitNode(nodeY, nodeX, xDirection, yDirection){
     return false;
 }
 
+/**
+ * Draws the path backwards by coloring the node stored in pathEndNode
+ * The pathendnode is always the uncolored node on the shortest path, furthest away from the starting point
+ * 
+ * When colored, the pathEndnode is then updated to the parent of pathEndNode (which is stored in the parent grid)
+ */
+function drawPathBackwards(){
+    //draw the path from the goal node to the beginning node
+    if (grid[pathEndNode[0]][pathEndNode[1]] != startPointColor) {
+        grid[pathEndNode[0]][pathEndNode[1]] = pathColor;
+        pathEndNode = parentGrid[pathEndNode[0]][pathEndNode[1]];
+    }
+}

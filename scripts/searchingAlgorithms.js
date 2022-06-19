@@ -26,6 +26,7 @@ var doAlgorithm = false;
 
 var insertionSort = false;
 var bogoSort = false;
+var heapSort = false;
 
 
 
@@ -103,6 +104,15 @@ document.querySelector('#bogoSort').onclick = function(){
 
 }
 
+document.querySelector('#heapSort').onclick = function(){
+    insertionSort = false;
+    bogoSort = false;
+    heapSort = true;
+    document.querySelector('#insertionSort').style.background = 'white';
+    document.querySelector('#bogoSort').style.background = 'white';
+    document.querySelector('#heapSort').style.background = 'green';
+}
+
 
 document.querySelector('#amountBarSlider').addEventListener('change', function(){
     amountBars = parseInt(document.querySelector('#amountBarSlider').value, 10);
@@ -124,6 +134,7 @@ function setup(amountBars){
     heightArray = [];
     buildHeightArray();
     draw();
+    resetHeapSort();
 }
 
 
@@ -228,10 +239,6 @@ function draw(){
 //------------------------------------------calculation of sorting
 
 
-function resetInsertionSort(){
-    loopVariableiInsertionSort = 1;
-    loopVariablejInsertionSort = 1;
-}
 
 function scrambleHeightArray(iterations = scramblingIterations){
     for (var i = 0; i < iterations; i++){
@@ -242,10 +249,6 @@ function scrambleHeightArray(iterations = scramblingIterations){
     }
 }
 
-var loopVariableiInsertionSort = 1;
-var loopVariablejInsertionSort = 1;
-
-
 function doAlgorithmStep(){
     if (insertionSort){
         doInsertionSortStep();
@@ -253,8 +256,25 @@ function doAlgorithmStep(){
     if (bogoSort){
         doBogoSortStep();
     }
+    if (heapSort){
+        doHeapsortStep();
+    }
 
 }
+
+//------------------------------------------------------insertion sort 
+
+function resetInsertionSort(){
+    loopVariableiInsertionSort = 1;
+    loopVariablejInsertionSort = 1;
+}
+
+
+//vairables for insertion sort
+var loopVariableiInsertionSort = 1;
+var loopVariablejInsertionSort = 1;
+
+
 
 function doInsertionSortStep(){
     var i = loopVariableiInsertionSort;
@@ -288,6 +308,8 @@ function insertionSort(A){
     }
 }
 
+//-----------------------------------------------------------bogosort
+
 function doBogoSortStep(){
     if (!isSorted()){
         scrambleHeightArray(1);
@@ -303,9 +325,70 @@ function isSorted(){
     return true;
 }
 
-function doHeapsortStep(){
+//-----------------------------------------------------------------heapsort
+var buildHeapLoopVariable = Math.ceil(heightArray.length / 2);
 
+var currentArrayLength = heightArray.length - 1;
+
+function resetHeapSort(){
+    buildHeapLoopVariable = Math.ceil(heightArray.length / 2);
+    currentArrayLength = heightArray.length - 1;
 }
+
+/**
+ * For some reason heapsort doesn't fully work every time its executed.
+ * Sometmes, the first 1-3 elements are not fully sorted.
+ * But i don't really know why
+ */
+
+function doHeapsortStep(){
+    if (buildHeapLoopVariable >= 0) {
+        //build (max) Heap
+        sinkDown(buildHeapLoopVariable, heightArray.length);
+        buildHeapLoopVariable -= 1;
+
+    } else{
+        //buildHeap is done, now do
+        if (currentArrayLength >= 0){
+            console.log("Built heap");
+            swap(0, currentArrayLength, heightArray);
+            currentArrayLength -= 1;
+            sinkDown(0, currentArrayLength);
+        }else{
+            //heapsort is done
+            resetHeapSort();
+            executeAlgorithm = false;
+        }
+    }
+}
+
+
+
+function sinkDown(index, arrayLength){
+    //var maxChildIndex = getMaxChild(index, arrayLength);      --this didn't work i actually don't know why (the first 3 elements were not sorted)
+
+    //get the max child index
+    var n = arrayLength;
+    var maxChildIndex = index;
+    var leftChildIndex = index * 2 + 1;
+    if (leftChildIndex < n && heightArray[leftChildIndex] > heightArray[index]){
+        maxChildIndex = leftChildIndex;
+    }
+    var rightChildIndex = index * 2 + 2;
+    if (rightChildIndex < n && heightArray[rightChildIndex] > heightArray[maxChildIndex]){
+        maxChildIndex = rightChildIndex;
+    }
+    
+    
+    //actual sinkDown function
+    if (maxChildIndex != index){
+        swap(maxChildIndex, index, heightArray);
+        sinkDown(maxChildIndex, arrayLength);
+    }
+}
+
+
+
 
  
 

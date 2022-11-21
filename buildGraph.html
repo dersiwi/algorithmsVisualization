@@ -26,25 +26,54 @@
             </div>
 
 
-            <h1>Hello and welcome to this website</h1>
-            <p class="whiteText">I built this website in order to visualize graphs, that find shortest paths and sorting algorithms.</p>
-            <p class="whiteText">Besides visusaizing them, i also wanted to provide a quick introcution into how they work.</p>
-            <p class="whiteText">Of course, in order to explain how shortest-path algorithms work i also wrote a quick introduction into graph theory.</p>
-            <p class="whiteText">This introduction however is very basic and short, just to explain the simplest termns</p>
+            <div class="actualBody">
+                <!--This is the actual body-->
+                <h1>Javascript - sorting Visualized</h1>
+                <canvas id="canvas" height="400" width="600">
 
-            <p class="whiteText">Finally, i also want to cover the basics of runtime-analysis, so that the user can assume the speed of the algorithms, when applied on a large scale</p>
+                </canvas>
 
-            <h2>Disclaimer</h2>
-            <p class="whiteText">
-                This website and interface was built for fun. If something doesn't work - for example executing multiple sorting algorithms back to back, each on a different
-                amount of bars (different n) - : <b>reload the website</b>. 
-            </p>
-            <p class="whiteText">
-                The website and managing scripts are far from error-resistant and it is very possible i forgot something, was too lazy to implement it or just implemented a bug.
-            </p>
-            <p class="whiteText">
-                On this note, have fun and explore some algorithms :)
-            </p>
+
+ 
+                <h3>Operation</h3>
+                <button type="button" id="calculate">Start Sorting</button>
+
+                <button type="button" id="scramble">Scramble</button>
+
+                <label class="whiteText">Amount Bars</label>
+                <input id="amountBarSlider" type="range" min="5" max="200" value="100">
+
+
+                <h3>Sorting Algorithms</h3>
+                <button type="button" id="insertionSort">Insertion Sort</button>
+                <button type="button" id="heapSort">Heap Sort</button>
+                <button type="button" id="bogoSort">Bogo Sort</button>
+
+                <h3>Stop drawing loop (cannot be unstopped)</h3>
+                <button type="button" id="stopDrawingLoop">Stop drawing</button>
+
+
+                <div>
+                    <!--
+                        <label for="fname">First name:</label>
+                        <input type="text" id="fname" name="fname"><br><br>
+                    -->
+
+
+
+                </div>
+
+                <h2>How does it work?</h2>
+
+                <p>Breadth first search</p>
+
+                <h2>See also : <a href="index.html">Visualisation of sorting algorithms</a> </h2>
+
+
+                <script src="scripts/buildGraph.js" charset="utf-8"></script>
+                
+
+            </div>
 
         </div>
         <!--Top menu -->
@@ -59,7 +88,7 @@
                 <p>Spacko</p>
                 <ul>
                     <li>
-                        <a href="home.html" class="active">
+                        <a href="index.html">
                             <span class="item">Home</span>
                         </a>
                     </li>
@@ -69,7 +98,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="sorting.html">
+                        <a href="sorting.html" class="active">
                             <span class="item">Sorting</span>
                         </a>
                     </li>

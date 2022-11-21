@@ -14,7 +14,6 @@ const scramblingIterations = 100;
 
 
 
-
 const visited = 'orange';
 
 

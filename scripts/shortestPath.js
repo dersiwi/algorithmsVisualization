@@ -3,20 +3,41 @@ const canvas = document.querySelector('#canvas');
 const ctx = canvas.getContext('2d');
 canvas.addEventListener("mousedown", mouseDownOnCanvas, false);
 
-var squareWidth = 21;
 const squareSpacing = 1;
+
+var squareWidth = findOptimalSquareWidth();
 var squaresPerRow = calculateSquaresPerRow();
 var amountSquareRows = calculateAmountRows();
 //alert(squaresPerRow);
 //alert(amountSquareRows);
 
+function findOptimalSquareWidth(){
+    console.log(canvas.width);
+    const possibleSquareWidths = []
+
+    var maxNumberToCheck = canvas.width / 2;
+    var baseSquareWidth = 5;
+    for(i = 0; i < maxNumberToCheck; i++){
+        if (Number.isInteger(canvas.width / (baseSquareWidth + squareSpacing + i))){
+            possibleSquareWidths.push(baseSquareWidth+1);
+        }
+    }
+    if (possibleSquareWidths.length > 0){
+        console.log("Calculated Square Width : " + possibleSquareWidths[0]);
+        return possibleSquareWidths[0];
+    } else{
+        console.log("Could not find an optimal baseSquareWidth.");
+        return 10;
+    }
+}
+
 function calculateSquaresPerRow(newSquareWidth = squareWidth){
-    return Math.floor(canvas.width / (newSquareWidth + squareSpacing));
+    return Math.floor(canvas.width / (newSquareWidth));
 }
 
 function calculateAmountRows(newSquareWidth = squareWidth){
     console.log("Amount square rows : " + canvas.height + "/" + (newSquareWidth + squareSpacing) + " = "  + Math.floor(canvas.height / (newSquareWidth + squareSpacing)));
-    return Math.floor(canvas.height / (newSquareWidth + squareSpacing));
+    return Math.floor(canvas.height / (newSquareWidth));
 }
 
 

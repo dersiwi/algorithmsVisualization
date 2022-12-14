@@ -1,0 +1,12 @@
+#canvas{
+
+/*height="440" width="660"*/
+height: 40%;
+width: 60%;
+margin:auto;
+}
+
+#canvasWrapper{
+    display: flex;
+    margin: 4% auto 4% auto;
+}

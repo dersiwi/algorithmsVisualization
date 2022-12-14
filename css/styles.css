@@ -13,24 +13,21 @@ body{
 h1{
     /*font-family: 'Lobster', cursive;*/
     font-size: 3rem;
-    color: #4ECCA3;
 }
 h2{
-    font-size: 2rem;
-    color: #4ECCA3;
-}
-
-h3{
-    color: #4ECCA3;
-}
-
-
-h4{
-    color: #4ECCA3;
+    font-size: 2.5rem;
 }
 
 a{
     color: #4ECCA3;
+}
+
+.center{
+  margin:auto;
+}
+
+.headline{
+  color: #4ECCA3;
 }
 
 .container{
@@ -43,7 +40,41 @@ a{
     text-align: center;
 }
 
+button{
+  font-size: large;
+  padding: 0.5em;
+  margin:auto;
+}
 
+.h1Underline{
+  width: 80%;
+  display:inline-block;
+}
+
+.underline{
+  display:inline-block;
+  width: 100%;
+}
+.buttonLayout{
+  margin:auto;
+}
+
+.whiteText{
+  color : white;
+  font-size: 200%;
+}
+
+.paragraph{
+  margin-bottom:5%;
+}
+
+
+.siteContent{
+  margin: 2%;
+  padding: 2%;
+  border: solid;
+  border-color: #816797;
+}
 nav{
     background: black;
     color: white;
@@ -89,9 +120,7 @@ nav{
     animation: fadeOut 1s 5s forwards;
   }
 
-  .whiteText{
-    color : white;
-  }
+ 
   
   @keyframes fadeOut {
     0% {

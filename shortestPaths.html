@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/shortestPathStyles.css">
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,37 +27,56 @@
             </div>
 
 
-            <div class="actualBody">
+            <div class="siteContent">
                 <!--This is the ac-->
 
-                <h1>Javascript - Calculating the shortest path</h1>
-                <canvas id="canvas" height="440" width="660">
-        
-                </canvas>
-                
-                <h3>Algorithm Inteaction</h3>
-                <button type="button" id="calculate">Start Algorithm</button>
+                <h1 class="headline">Shortest Paths</h1>
+                <hr class="underline">
+                <div class="paragraph">
+                    <p class="whiteText">
+                        Shortest paths in graphs are a very important problem in many areas of computer science and other disciplines as well.
+                        The Visualisation-Tool provided resembles a graph in such a way that every square is a node inside the graph, which is connected
+                        to all sourrounding squares (nodes). <br>
+                    </p>
+                </div>
 
+
+                <h1 class="headline">Try it yourself</h1>
+                <hr class="underline">
+                <div id="canvasWrapper">
+                    <canvas id="canvas"></canvas>
+                    <form id="sliderData">
+                        <input id="squareSizeSlider" title="Sqzare size" type="range" min="1" max="10" value="2">
+                    </form>
+                    
+                </div>
+                <div id="buttonsForCanvas">
+                        
+                    <h2 class="headline">Algorithm Control and drawing options</h2>
+                    <hr class="h1Underline">
+                    <div style="display:flex;">
+                        <div class="buttonLayout">
+                            <button type="button" id="calculate" title="Starts the selected algorithm. Make sure to have set a starting and finishing point.">Start Algorithm</button>
+    
                                 
-                <button type="button" id="stopAlgorithm">Stop Algorithm</button>
-                <button type="button" id="resumeAlgorithm">Resume Algorithm</button>
-                <button type="button" id="resetAlgorithm">Reset Algorithm</button>
-
-                <h3>Drawing</h3>
-                <button type="button" id="setStarting">Set starting point</button>
-                <button type="button" id="setFinishing">Set finishing point</button>
-                <button type="button" id="draw">Draw</button>
-                <button type="button" id="erase">erase</button>
-                <button type="button" id="clear">Clear Grid</button>
-                <button type="button" id="drawLine">Draw Line Mode</button>
-
-
+                            <button type="button" id="stopAlgorithm" title="Stop execution of the algorithm at the current state.">Stop Algorithm</button>
+                            <button type="button" id="resumeAlgorithm" title="Click when algorithm was stopped, this resumes the execution.">Resume Algorithm</button>
+                            <button type="button" id="resetAlgorithm">Reset Algorithm</button>
+                        </div>
+                        <div class="buttonLayout">
+                            <button type="button" id="setStarting">Set starting point</button>
+                            <button type="button" id="setFinishing">Set finishing point</button>
+                            <button type="button" id="draw">Draw</button>
+                            <button type="button" id="erase">erase</button>
+                            <button type="button" id="clear">Clear Grid</button>
+                            <button type="button" id="drawLine">Draw Line Mode</button>
+                        </div>
+                    </div>
+                </div>
 
                 <h3>Alter square size</h3>
                 <label class="whiteText">Square-Size :</label>
-                <form id="sliderData"> 
-                    <input id="squareSizeSlider" type="range" min="3" max="22" value="22">
-                </form>
+
 
                 <h3>Stop drawing loop (cannot be unstopped)</h3>
                 <button type="button" id="stopDrawingLoop">Stop drawing</button>
@@ -68,7 +88,7 @@
                 <h2>See also : <a href="SearchingAlgorithms.html">Visualisation of sorting algorithms</a> </h2>
 
 
-                <script src="scripts/shortestPath.js" charset="utf-8"></script>
+                <script src="scripts/shortestPaths2.js" charset="utf-8"></script>
                 <script src="scripts/shortestPathsListener.js" charset="utf-8"></script>
                 
 

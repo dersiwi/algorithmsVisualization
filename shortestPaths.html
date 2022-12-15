@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Shortest Paths</title>
     <style>
 
     </style>
@@ -40,53 +40,80 @@
                     </p>
                 </div>
 
+                <h1 class="headline">How does it work?</h1>
+                <hr class="underline">
+                <div class="paragraph">
+                    <p class="whiteText">
+                        1. Select your algorithm; 2. Draw your obstacles; 3. Start the algorithm and see how it finds the shortest path from your set starting point
+                        to your set finishing point.
+                        Stop the algorithm to examine its current state, maybe draw some more obstacles and then resume execution.<br>
+                        Grey fields are fields the algorithm knows about, but didn't yet fully explore. Orange fields are the ones the algrithm already looked at.
+
+                    </p>
+                </div>
+
+                <div>
+                    <button type="button" id="startDemo" title="Start demonstration">Show me!</button>
+                </div>
 
                 <h1 class="headline">Try it yourself</h1>
                 <hr class="underline">
-                <div id="canvasWrapper">
-                    <canvas id="canvas"></canvas>
-                    <form id="sliderData">
-                        <input id="squareSizeSlider" title="Sqzare size" type="range" min="1" max="10" value="2">
-                    </form>
-                    
-                </div>
+
                 <div id="buttonsForCanvas">
                         
-                    <h2 class="headline">Algorithm Control and drawing options</h2>
-                    <hr class="h1Underline">
+
                     <div style="display:flex;">
                         <div class="buttonLayout">
                             <button type="button" id="calculate" title="Starts the selected algorithm. Make sure to have set a starting and finishing point.">Start Algorithm</button>
-    
-                                
+                            
+                            <!--
+                                Color picker ::
+                                https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color
+                            -->
                             <button type="button" id="stopAlgorithm" title="Stop execution of the algorithm at the current state.">Stop Algorithm</button>
                             <button type="button" id="resumeAlgorithm" title="Click when algorithm was stopped, this resumes the execution.">Resume Algorithm</button>
                             <button type="button" id="resetAlgorithm">Reset Algorithm</button>
+                            <div class="dropdown">
+                                <button>BFS</button>
+                                <div class="dropdown-content">
+                                    <button type="button" id="bfs">BFS</button>
+
+                                    <button type="button" id="selectAStar">A*, distance heuristic</button>
+                                    <button type="button" id="selectdijkstra">Dijkstra</button>
+                                </div>
+                            </div> 
                         </div>
                         <div class="buttonLayout">
+
+
                             <button type="button" id="setStarting">Set starting point</button>
                             <button type="button" id="setFinishing">Set finishing point</button>
-                            <button type="button" id="draw">Draw</button>
-                            <button type="button" id="erase">erase</button>
-                            <button type="button" id="clear">Clear Grid</button>
-                            <button type="button" id="drawLine">Draw Line Mode</button>
+
+                            <div class="dropdown">
+                                <button>Drawing Mode</button>
+                                <div class="dropdown-content">
+                                    <button type="button" id="draw">Draw</button>
+                                    <input type="color" id="drawingColor" name="head" value="#000000"><!--<label>draw</label>-->
+                                    <button type="button" id="erase">erase</button>
+                                    <button type="button" id="clear">Clear Grid</button>
+                                    <button type="button" id="drawLine">Draw Line Mode</button>
+                                </div>
+                            </div> 
+                            
+                           
                         </div>
                     </div>
+                    <form id="sliderData">
+                        <label>Adjust Grid size</label>
+                        <input id="squareSizeSlider" title="Sqzare size" type="range" min="1" max="10" value="2">
+                    </form>
+
+                    <div id="canvasWrapper">
+                        <canvas id="canvas"></canvas>
+    
+                        
+                    </div>
                 </div>
-
-                <h3>Alter square size</h3>
-                <label class="whiteText">Square-Size :</label>
-
-
-                <h3>Stop drawing loop (cannot be unstopped)</h3>
-                <button type="button" id="stopDrawingLoop">Stop drawing</button>
-
-                <h2>How does it work?</h2>
-        
-                <p>Breadth first search</p>
-        
-                <h2>See also : <a href="SearchingAlgorithms.html">Visualisation of sorting algorithms</a> </h2>
-
 
                 <script src="scripts/shortestPaths2.js" charset="utf-8"></script>
                 <script src="scripts/shortestPathsListener.js" charset="utf-8"></script>
@@ -104,7 +131,6 @@
                 <img src="https://1.bp.blogspot.com/-vhmWFWO2r8U/YLjr2A57toI/AAAAAAAACO4/0GBonlEZPmAiQW4uvkCTm5LvlJVd_-l_wCNcBGAsYHQ/s16000/team-1-2.jpg" alt="profile_picture">
                 -->
                 <h3>Simon Wilhelm Schübel</h3>
-                <p>Spacko</p>
                 <ul>
                     <li>
                         <a href="index.html">

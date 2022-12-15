@@ -151,10 +151,10 @@ class PriorityQueue{
         }
     }
 
-    deleteElment(element)
+    deleteElement(element)
     {
         for (var i = 0; i < this.items.length;i++){
-            if (this.items[i].element.index == element.index){
+            if (this.items[i].item.index == element.index){
                 this.items.splice(i, 1);
             }
         }
@@ -172,6 +172,16 @@ class PriorityQueue{
 
     isEmpty(){
         return this.items.length == 0;
+    }
+    
+
+    getPrio(element){
+        for (var i = 0; i < this.items.length;i++){
+            if (this.items[i].item.index == element.index){
+                return this.items[i].priority;
+            }
+        }
+        return 10000;
     }
 }
 
@@ -281,6 +291,21 @@ setupGrid();
 draw();
 
 //-------------------------------------------------------------------algorithms 
+
+const AlgorithmToExecute = {
+    BFS : 1,
+    dijkstra : 2
+}
+var currentAlgorithm = AlgorithmToExecute.BFS;
+
+
+function setAlgoBooleans(){
+    doAlgorithm = true;
+    executeAlgorithm = true;
+    algorithmFinished = false;
+    executeAlgorithm = true;
+}
+
 queue = []
 finishNode = null;
 algorithmFinished = false;
@@ -290,10 +315,7 @@ function startAlgorithm(){
     setupGraph()
     queue = []
     queue.push(startingNode);
-    doAlgorithm = true;
-    executeAlgorithm = true;
-    algorithmFinished = false;
-    executeAlgorithm = true;
+    setAlgoBooleans();
 }
 
 function finish(node){
@@ -307,7 +329,7 @@ function doAlgorithmStepBFS(){
 
         
 
-        neighbours = currNode.reachableNodes;
+        neighbours = currNode.getReachableNodes();
         for (i = 0; i < neighbours.length; i++){
             neighbourNode = neighbours[i][0];   //reachable nodes are pair of [node, weight] - weight is irrelevant for BFS
             if (isToBeExplored(neighbourNode)) {
@@ -329,11 +351,13 @@ function doAlgorithmStepBFS(){
 }
 
 
-pq = PriorityQueue();
+pq = new PriorityQueue();
 function startDijkstra(){
+    
     setupGraph();
-    pq = PriorityQueue();
-    pq.enqueue(startingNode);
+    pq = new PriorityQueue();
+    pq.enqueue(startingNode, 0);
+    setAlgoBooleans();
 }
 
 /**
@@ -346,15 +370,17 @@ function startDijkstra(){
  */
 function doAlgorithmStepDijkstra(){
     if (!pq.isEmpty()){
-        currNode = pq.getMinPrio();
-        neighbours = currNode.getReachableNodes();
+        var pqElement = pq.getMinPrio();
+        var currNode = pqElement.item;
+        var neighbours = currNode.getReachableNodes();
         for (i = 0; i < neighbours.length; i++){
             neighbourNode = neighbours[i][0];   //reachable nodes are pair of [node, weight]
             weightToNeighbour = neighbours[i][1];
             if (exploreNode(neighbourNode)) {    //node should be looked at
 
                 //if we find a queued node, we check if the distance is now cheaper, if yes, we update it.
-                if (neighbourNode.color == queuedColor && currNode.calculateWeight(currNode, neighbourNode) < pq.getPrio(neighbourNode)){
+                if (neighbourNode.color == queuedColor && 
+                    pqElement.priority + currNode.calculateWeight(currNode, neighbourNode) < pq.getPrio(neighbourNode)){
                     neighbourNode.parent = currNode;
                     pq.changePriority(neighbourNode, currNode.calculateWeight(currNode, neighbourNode));
                 }
@@ -366,7 +392,7 @@ function doAlgorithmStepDijkstra(){
 
                 neighbourNode.setParent(currNode);
                 neighbourNode.color = queuedColor;
-                pq.enqueue(neighbourNode, weightToNeighbour);
+                pq.enqueue(neighbourNode, weightToNeighbour + pqElement.priority);
             }
         }
         if (currNode.color != startPointColor){
@@ -421,7 +447,14 @@ var drawingIntevalID = setInterval(function(){
     //executeAlgorithm is true if another step of the algorithm is supposed to be executed
     if (doAlgorithm && executeAlgorithm){
         if (!algorithmFinished){
-            doAlgorithmStepBFS();
+            switch(currentAlgorithm){
+                case AlgorithmToExecute.BFS:
+                    doAlgorithmStepBFS();
+                case AlgorithmToExecute.dijkstra:
+                    doAlgorithmStepDijkstra();
+                default:
+                    return;
+            }
         } else{
             drawPathBackwards();
         }
@@ -569,8 +602,14 @@ document.querySelector('#draw').onclick = function(){
 
 //calculate algorithm
 document.querySelector('#calculate').onclick = function(){
-    startAlgorithm();
-
+    switch(currentAlgorithm){
+        case AlgorithmToExecute.BFS:
+            startAlgorithm();
+        case AlgorithmToExecute.dijkstra:
+            startDijkstra();
+        default:
+            return;
+    }
     //see way down
 }
 
@@ -591,6 +630,14 @@ document.querySelector('#resumeAlgorithm').onclick = function(){
     executeAlgorithm = true;
 }
 
+document.querySelector('#bfs').onclick = function(){
+    currentAlgorithm = AlgorithmToExecute.BFS;
+    document.querySelector('#selectedAlgorithm').innerHTML = "BFS";
+}
+document.querySelector('#selectdijkstra').onclick = function(){
+    currentAlgorithm = AlgorithmToExecute.dijkstra;
+    document.querySelector('#selectedAlgorithm').innerHTML = "Dijkstra";
+}
 
 //aCOLOR PICKER 
 document.querySelector('#drawingColor').addEventListener("change", watchColorPicker, false);

@@ -21,6 +21,25 @@ margin:auto;
     font-size:x-large;
 }
 
+#weightDisplay{
+    width: 25%;
+    margin: 0 10% 0 10%;
+}
+
+#squareOneColor{
+    margin:auto 0 auto 0;
+}
+
+.transitionCalculatorContent{
+    margin: auto;
+    width: 50%;
+    border: 2px solid #816797;
+    padding: 1%;
+    border-radius: 15%;
+    text-align: center;
+}
+
+
 /*
 ---------------------------------------------------------styles for dropdown menu
 */
@@ -57,5 +76,3 @@ display: none;
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {display: block;}
 
-/* Change the background color of the dropdown button when the dropdown content is shown */
-.dropdown:hover .dropbtn {background-color: #3e8e41;} 

@@ -14,9 +14,6 @@ h1{
     /*font-family: 'Lobster', cursive;*/
     font-size: 3rem;
 }
-h2{
-    font-size: 2.5rem;
-}
 
 a{
     color: #4ECCA3;
@@ -33,6 +30,11 @@ a{
 .container{
     text-align: center;
     position: relative;
+}
+
+.imageContainer{
+  text-align: center;
+  padding:4%;
 }
 
 .dice{
@@ -61,7 +63,7 @@ button{
 
 .whiteText{
   color : white;
-  font-size: 200%;
+  font-size: 150%;
 }
 
 .paragraph{

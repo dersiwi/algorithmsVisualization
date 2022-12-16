@@ -17,7 +17,7 @@ const msBetweenDraws = 100;
 
 const defaultSquareWidth = 3;
 var squareSpacing = 1;
-var squareWidth = defaultSquareWidth*2;
+var squareWidth = defaultSquareWidth*7;
 
 //---------------------------------------------setup global variables 
 const maxCanvasDimension = 900;
@@ -218,6 +218,8 @@ var startingNode = null;
 var goalNode = null;
 
 
+var runDemo = false;
+
 //---------------------------------------setup of the grid
 
 
@@ -312,7 +314,7 @@ algorithmFinished = false;
 doAlgorithm = false;
 executeAlgorithm = false;
 function startAlgorithm(){
-    setupGraph()
+    setupGraph();
     queue = []
     queue.push(startingNode);
     setAlgoBooleans();
@@ -324,10 +326,9 @@ function finish(node){
 }
 
 function doAlgorithmStepBFS(){
+
     if (queue.length > 0){
         currNode = queue.shift();       //get next node from fifo queue
-
-        
 
         neighbours = currNode.getReachableNodes();
         for (i = 0; i < neighbours.length; i++){
@@ -348,6 +349,14 @@ function doAlgorithmStepBFS(){
             currNode.color = visited;
         }
     }
+}
+function isToBeExplored(node){
+    if (node.color == defaultNodeColor || node.color == finishPointColor) {
+        console.log("Exploring node color : " + node.color);
+        return true;
+    }    
+    console.log("NOT exploring node color : " + node.color);
+    return false;
 }
 
 
@@ -411,12 +420,7 @@ function exploreNode(node){
 function isGoalNode(node){
     return node.color == finishPointColor;}
 
-function isToBeExplored(node){
-    if (node.color == defaultNodeColor || node.color == finishPointColor){
-        return true;
-    }    
-    return false;
-}
+
 function isVisited(node){
     if (node.color == visited || node.color == startPointColor){return true;}
     return false;}
@@ -445,13 +449,18 @@ var drawingIntevalID = setInterval(function(){
     draw();
     //doAlgorithm is entered as soon as the algroithm starts
     //executeAlgorithm is true if another step of the algorithm is supposed to be executed
+    if (runDemo){
+        runDemoStep();
+    }
     if (doAlgorithm && executeAlgorithm){
         if (!algorithmFinished){
             switch(currentAlgorithm){
                 case AlgorithmToExecute.BFS:
                     doAlgorithmStepBFS();
+                     break;
                 case AlgorithmToExecute.dijkstra:
                     doAlgorithmStepDijkstra();
+                    break;
                 default:
                     return;
             }
@@ -605,8 +614,10 @@ document.querySelector('#calculate').onclick = function(){
     switch(currentAlgorithm){
         case AlgorithmToExecute.BFS:
             startAlgorithm();
+            break;
         case AlgorithmToExecute.dijkstra:
             startDijkstra();
+            break;
         default:
             return;
     }
@@ -630,6 +641,7 @@ document.querySelector('#resumeAlgorithm').onclick = function(){
     executeAlgorithm = true;
 }
 
+
 document.querySelector('#bfs').onclick = function(){
     currentAlgorithm = AlgorithmToExecute.BFS;
     document.querySelector('#selectedAlgorithm').innerHTML = "BFS";
@@ -645,4 +657,89 @@ document.querySelector('#drawingColor').addEventListener("change", watchColorPic
 function watchColorPicker(event) {
     drawingColor = event.target.value;
     console.log("Drawing color selected : " + drawingColor);
+    changeDrawingMode(DrawingMode.Draw, "#draw");
+    currentDrawingMode = DrawingMode.Draw;
+}
+
+//-----------------------demonstration
+
+var colors = [obstacleColor, "#865e3c", "#e66100", "#2ec27e"];
+var nodesAndColors = []; // contians a list of [node, color] which is iterated through by the demo
+const maxRadius = Math.floor(grid.length / 3);
+var currentStage = 0;
+
+document.querySelector('#startDemo').onclick = function(){
+    setupGrid();
+    setupGraph();
+    //setup demonstration
+    demoCentercircle = [Math.floor(grid.length / 2), Math.floor(grid[0].length / 2)];
+    //calculate the squares that are supposed to be colored
+    radius = colors.length;
+    bfsqueue = []
+    startingNode = grid[demoCentercircle[0]][demoCentercircle[1]];
+    bfsqueue.push(startingNode);
+    nodesAndColors.push([startingNode, colors[0]]);
+    startingNode.color = visited;
+    radiusCounter =0;
+    layerCounter = 0;
+    while (radiusCounter < radius){
+        var currNode = bfsqueue.shift();
+        var neighbours = currNode.getReachableNodes();
+        for (i = 0; i < neighbours.length; i++){
+            neighbourNode = neighbours[i][0];
+            if (neighbourNode.color != visited){
+                bfsqueue.push(neighbourNode);
+                nodesAndColors.push([neighbourNode, colors[radiusCounter]]);
+                neighbourNode.color = visited;
+                layerCounter++;
+            }
+        }
+        
+        
+        if (Math.floor(Math.pow(2, radiusCounter)) <= layerCounter){
+            layerCounter = 0;
+            radiusCounter++;
+        }
+    }
+
+    //reset their colors to white 
+    for (i = 0; i < nodesAndColors.length; i++){
+        nodesAndColors[i][0].color = defaultNodeColor;
+    }
+
+    runDemo = true;
+}
+
+function runDemoStep(){
+    
+    if (currentStage == 0){
+        currNodePair = nodesAndColors.shift();
+        currNodePair[0].color = currNodePair[1];
+        if (nodesAndColors.length == 0){
+            currentStage++;
+        }
+    }
+    if (currentStage == 1){
+        //set starting point
+        setStartingPosition(new Coordinate(2, 2));
+        currentStage++;
+    }
+
+    if (currentStage == 2){
+        //set finishing point
+        setFinishingPosition(new Coordinate(grid[grid.length - 1].length - 1,grid.length - 1));
+        currentStage++;
+    }
+
+    if (currentStage == 3){
+        //start algorithm
+        runDemo = false;
+    }
+
+    //fill the circle with colors
+
+    //find a starting position 
+    //find a finishing posiiton
+
+    //start the algoithm
 }

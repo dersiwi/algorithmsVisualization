@@ -1,30 +1,27 @@
 - Shortest Paths
 
-    --Implement an interface, such that you can draw any color on the grid
-        This color is then the weight of the node, the closer the color to black is, the "heavier" the node is, 
-        the more difficult it is to travel through : 
-        weight(color) = dist(rgb(color), (0,0,0)) =sqrt(red + green + blue)
-
     --Implement a function to store a drawn grid
         starting and enpoint can be set again, without having to redraw the entire grid
 
-    --Implement a reset function
-        This function should reset the grid, same as reloading the page does
-    
     --Implement other algorithms
-        -Djikstra
-        -DFS
         -A*
-        -Bellman Ford (? maybe)
 
-    --Implement a slider (similar to the one described for shortest paths) which lets a user alter the square-size
+    -- bugs:
+        -BFS is supposed to see all non-white fields as obstacles
+        
+        -when selecting a color, automatically switch to drawing mode
+        -when over-coloring the starting or finishing point, set it to null
+        -implement actual priority queue for dijkstra and not juts listener
+        -enable nodes to show their weight 
+        -read over text
+        -write paragraph for explanation of the algorithms
+
+
 
     --Implement lineDraw-mode   
         Draw Diagonal Lines 
     
-    --Other drawing modes
-        Draw Rectangle
-        Draw Circle
+    --Other drawing modes detect of user is holding and let him draw over the canvs this way
 
 
 

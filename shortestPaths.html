@@ -73,6 +73,7 @@
                             <button type="button" id="stopAlgorithm" title="Stop execution of the algorithm at the current state.">Stop Algorithm</button>
                             <button type="button" id="resumeAlgorithm" title="Click when algorithm was stopped, this resumes the execution.">Resume Algorithm</button>
                             <button type="button" id="resetAlgorithm">Reset Algorithm</button>
+                            
                             <div class="dropdown">
                                 <button id="selectedAlgorithm">Algorithm</button>
                                 <div class="dropdown-content">
@@ -111,11 +112,42 @@
     
                         
                     </div>
+                    
+                    <h2 class="headline">Interpretation of the grid</h2>
+                    <div class="paragraph">
+                        <p class="whiteText">
+                            The grid resembles a graph, but you can also think of it as just a map. The difficulty of traveling between
+                            two squares is determined by their color. Every square of the grid is a node in a graph. All adjacent squares are 
+                            reachable nodes in the corresponding graph. 
+                        </p>
+                    </div>
+
+                    <h2 class="headline">Understand the weight function</h2>
+                    <div style="margin: 1% 0 1% 0;">
+                        <div class="transitionCalculatorContent">
+                            <input type="color" id="squareOneColor" name="head" value="#000000">
+                            <button id="weightDisplay"></button>
+                            <input type="color" id="squareTwoColor" name="head" value="#000000">
+                        </div>
+                   </div>
+                   <p class="whiteText">
+                    The number between the two color-pickers resembles the difficulty of traveling from <span id="colorOneInText">color one</span> to
+                    <span id="colorTwoInText">color two</span>. <br>
+                    The higher the number, the more difficult it is to travel from the square to the next. A black sqaure cannot be enetered. <br>
+                    You could also think of this map as a <span class="headline">height map</span>, where the darkness of a color resembles the height
+                    of the square you are standing on. The number displayed in the middle would then be the altitude you'd have to cross when crossing from one 
+                    square to the next. A value of 127 is horizontal, anything smaller than 127 is going downhill (easy) and anything greater 127 is going uphill (difficult). 
+                    </p>
+                   
+
+                    
+                    
+
                 </div>
 
                 <script src="scripts/shortestPaths2.js" charset="utf-8"></script>
                 <script src="scripts/shortestPathsListener.js" charset="utf-8"></script>
-                
+                <script src="scripts/transitionCalculator.js" charset="utf-8"></script>
 
             </div>
 

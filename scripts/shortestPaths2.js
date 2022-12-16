@@ -68,6 +68,7 @@ class Node {
         this.color = color;
         this.reachableNodes = [];
         this.parent = null;
+        this.currSmallestDistance = 0;
     }
 
     setColor(color){
@@ -82,13 +83,17 @@ class Node {
 
     //calculates the weight of the edge between node1 and node 2 based on their color.
     calculateWeight(node1, node2) {
+        
         console.log("Calculating weight");
         //the weight between two nodes is their difference in brightness 
         var node1Brightness = rgbToLuma(node1.getColorAsRGB());
         var node2Brightness = rgbToLuma(node2.getColorAsRGB());
+        /*
         var weightOfNodes = (255 + (node1Brightness - node2Brightness)) / 2;
         console.log(weightOfNodes);
         return weightOfNodes;
+        */
+       return node1Brightness - node2Brightness;
     }
 
 
@@ -364,7 +369,17 @@ pq = new PriorityQueue();
 function startDijkstra(){
     
     setupGraph();
+
+    //set all distances of all nodes to infinity
+    const infinity = 10000000
+    for (i = 0; i < grid.length; i++){
+        for (j = 0; j < grid[i].length; j++){
+            grid[i][j].currSmallestDistance = infinity;
+        }
+    }
+
     pq = new PriorityQueue();
+    startingNode.currSmallestDistance = 0;
     pq.enqueue(startingNode, 0);
     setAlgoBooleans();
 }
@@ -382,26 +397,33 @@ function doAlgorithmStepDijkstra(){
         var pqElement = pq.getMinPrio();
         var currNode = pqElement.item;
         var neighbours = currNode.getReachableNodes();
+
         for (i = 0; i < neighbours.length; i++){
             neighbourNode = neighbours[i][0];   //reachable nodes are pair of [node, weight]
             weightToNeighbour = neighbours[i][1];
             if (exploreNode(neighbourNode)) {    //node should be looked at
-
-                //if we find a queued node, we check if the distance is now cheaper, if yes, we update it.
-                if (neighbourNode.color == queuedColor && 
-                    pqElement.priority + currNode.calculateWeight(currNode, neighbourNode) < pq.getPrio(neighbourNode)){
-                    neighbourNode.parent = currNode;
-                    pq.changePriority(neighbourNode, currNode.calculateWeight(currNode, neighbourNode));
-                }
-                
                 if (isGoalNode(neighbourNode)){
                     //found the goal node, end algorithm
                     finish(neighbourNode);
                 }
 
-                neighbourNode.setParent(currNode);
-                neighbourNode.color = queuedColor;
-                pq.enqueue(neighbourNode, weightToNeighbour + pqElement.priority);
+                //if we find a queued node, we check if the distance is now cheaper, if yes, we update it.
+                if (neighbourNode.color == queuedColor){
+                    newDistance = currNode.currSmallestDistance + currNode.calculateWeight(currNode, neighbourNode);
+                    if (newDistance < neighbourNode.currSmallestDistance){
+                        neighbourNode.parent = currNode;
+                        pq.changePriority(neighbourNode, newDistance);
+                    }
+                } else{
+                    neighbourNode.currSmallestDistance = weightToNeighbour + pqElement.priority;
+                    neighbourNode.setParent(currNode);
+                    neighbourNode.color = queuedColor;
+                    pq.enqueue(neighbourNode, neighbourNode.currSmallestDistance);
+                }
+                
+
+
+                
             }
         }
         if (currNode.color != startPointColor){
@@ -669,6 +691,16 @@ const maxRadius = Math.floor(grid.length / 3);
 var currentStage = 0;
 
 document.querySelector('#startDemo').onclick = function(){
+    setupDemo();
+    runDemo = true;
+}
+
+function resetDemo(){
+    currentStage = 0;
+    nodesAndColors = [];
+}
+
+function setupDemo(){
     setupGrid();
     setupGraph();
     //setup demonstration
@@ -696,7 +728,7 @@ document.querySelector('#startDemo').onclick = function(){
         }
         
         
-        if (Math.floor(Math.pow(2, radiusCounter)) <= layerCounter){
+        if (Math.floor(Math.pow(2, radiusCounter + 1)) <= layerCounter){
             layerCounter = 0;
             radiusCounter++;
         }
@@ -706,8 +738,6 @@ document.querySelector('#startDemo').onclick = function(){
     for (i = 0; i < nodesAndColors.length; i++){
         nodesAndColors[i][0].color = defaultNodeColor;
     }
-
-    runDemo = true;
 }
 
 function runDemoStep(){
@@ -734,7 +764,10 @@ function runDemoStep(){
     if (currentStage == 3){
         //start algorithm
         runDemo = false;
+        resetDemo();
     }
+
+
 
     //fill the circle with colors
 

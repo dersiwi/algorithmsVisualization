@@ -129,21 +129,23 @@
                             <input type="color" id="squareTwoColor" name="head" value="#000000">
                         </div>
                    </div>
-                   <p class="whiteText">
-                    The number between the two color-pickers resembles the difficulty of traveling from <span id="colorOneInText">color one</span> to
-                    <span id="colorTwoInText">color two</span>. <br>
-                    The higher the number, the more difficult it is to travel from the square to the next. A black sqaure cannot be enetered. <br>
-                    You could also think of this map as a <span class="headline">height map</span>, where the darkness of a color resembles the height
-                    of the square you are standing on. The number displayed in the middle would then be the altitude you'd have to cross when crossing from one 
-                    square to the next. A value of 0 is horizontal, anything smaller than 0 is going downhill (easy) and anything greater 0 is going uphill (difficult). 
-                    </p>
+                   <div class="paragraph">
+                        <p class="whiteText">
+                            The number between the two color-pickers resembles the difficulty of traveling from <span id="colorOneInText">color one</span> to
+                            <span id="colorTwoInText">color two</span>. <br>
+                            The higher the number, the more difficult it is to travel from the square to the next. A black sqaure cannot be enetered. <br>
+                            You could also think of this map as a <span class="headline">height map</span>, where the darkness of a color resembles the height
+                            of the square you are standing on. The number displayed in the middle would then be the altitude you'd have to cross when crossing from one 
+                            square to the next. A value of 0 is horizontal, anything smaller than 0 is going downhill (easy) and anything greater 0 is going uphill (difficult). 
+                        </p>
+                   </div>
                    
 
                     
                     
 
                 </div>
-
+                <script src="scripts/PrioQueue.js" charset="utf-8"></script>
                 <script src="scripts/shortestPaths2.js" charset="utf-8"></script>
                 <script src="scripts/transitionCalculator.js" charset="utf-8"></script>
                 <script src="scripts/demo.js" charset="utf-8"></script>

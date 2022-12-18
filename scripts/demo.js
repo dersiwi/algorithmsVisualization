@@ -25,9 +25,16 @@ var finishPointCoordinate = null;
 
 
 document.querySelector('#startDemo').onclick = function(){
+    setupGrid();
+    setupGraph();
 
+    setupRandomDemo();
 
-    /*
+    document.getElementById("beginningOfVisualization").scrollIntoView({behavior: 'smooth'});
+    runDemo = true;
+}
+
+function setupRandomDemo(){
     //Choose random demo and setupthis way
     demotype = Math.floor(Math.random() * 2);
     switch(demotype){
@@ -40,11 +47,6 @@ document.querySelector('#startDemo').onclick = function(){
         default:
             setupDemo();
     }
-
-    */
-    setupDemoLine();
-    document.getElementById("beginningOfVisualization").scrollIntoView({behavior: 'smooth'});
-    runDemo = true;
 }
 
 function resetDemo(){
@@ -53,8 +55,7 @@ function resetDemo(){
 }
 
 function setupDemo(){
-    setupGrid();
-    setupGraph();
+
     //setup demonstration
     demoCentercircle = [Math.floor(grid.length / 2), Math.floor(grid[0].length / 2)];
     //calculate the squares that are supposed to be colored
@@ -106,16 +107,18 @@ function setupDemoLine(){
             nodesAndColors.push([grid[middleIndex + j][i], colors[counter]]);
             
         }
-        console.log("color  : " + colors[counter]);
         squaresPerColorCounter++;
         if (squaresPerColorCounter >= squaresPerColor){
             counter++;
-            squaresPerColor = 0;
+            squaresPerColorCounter = 0;
         }
         if (counter >= colors.length){//this sould never be true but just in case
             counter = 0; squaresPerColorCounter = 0;}
     }
 }
+
+
+
 
 function runDemoStep(){
     

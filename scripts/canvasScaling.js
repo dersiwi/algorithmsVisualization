@@ -62,6 +62,7 @@ function changeGridSize(multiplier){
     squareWidth = multiplier * (defaultSquareWidth) + (multiplier - 1) * squareSpacing;
     canvas.width = getDesiredCanvasDimension(originalCanvasWidth);
     canvas.height = getDesiredCanvasDimension(originalCanvasHeight);
+    render();
     setupGrid();
 }
 

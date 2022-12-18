@@ -242,7 +242,7 @@ function doAlgorithmStepDijkstra(){
                 }
 
                 //if we find a queued node, we check if the distance is now cheaper, if yes, we update it.
-                if (neighbourNode.color == queuedColor){
+                if (neighbourNode.queued){
                     newDistance = currNode.currSmallestDistance + currNode.calculateWeight(currNode, neighbourNode);
                     if (newDistance < neighbourNode.currSmallestDistance){
                         neighbourNode.parent = currNode;
@@ -251,23 +251,19 @@ function doAlgorithmStepDijkstra(){
                 } else{
                     neighbourNode.currSmallestDistance = weightToNeighbour + pqElement.priority;
                     neighbourNode.setParent(currNode);
-                    neighbourNode.color = queuedColor;
+                    neighbourNode.setQueued(true);
                     pq.enqueue(neighbourNode, neighbourNode.currSmallestDistance);
                 }
-                
-
-
-                
             }
         }
         if (currNode.color != startPointColor){
-            currNode.color = visited;
+            currNode.setVisited(true);
         }
     }
 }
 
 function exploreNode(node){
-    if (node.color == visited || node.color == startPointColor || node.color == obstacleColor){
+    if (node.visited || node.color == startPointColor || node.color == obstacleColor){
         return false;
     }
     return true;

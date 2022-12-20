@@ -15,39 +15,15 @@ var drawingColor = obstacleColor;
 
 const msBetweenDraws = 100;
 
-const defaultSquareWidth = 3;
-var squareSpacing = 1;
-var squareWidth = defaultSquareWidth*7;
+
 
 //---------------------------------------------setup global variables 
-const maxCanvasDimension = 900;
-const canvas = document.querySelector('#canvas');
-const originalCanvasHeight = canvas.height;
-const originalCanvasWidth = canvas.width;
 
-canvas.width = getDesiredCanvasDimension(originalCanvasWidth);
-canvas.height = getDesiredCanvasDimension(originalCanvasHeight);
-
-
-const ctx = canvas.getContext('2d');
 canvas.addEventListener("mousedown", mouseDownOnCanvas, false);
 
 
 
-function getDesiredCanvasDimension(current){
-    console.log("calculating optimal canvas size");
-    //return a number closest to currentWidth that is divisible by (squareSpacing + squareWidth*squareSpacing)
-    while (current < maxCanvasDimension){
-        if(Number.isInteger((current - squareSpacing)/ (squareSpacing + squareWidth))){
-            console.log(current);
-            return current;
-        }
-        else{
-            current++;
-        }
-    }
-    return current;
-}
+
 
 
 
@@ -58,72 +34,6 @@ function rgbToLuma(rgb){
         return (2*rgb.r+ rgb.b+3*rgb.g)/6;
     }
 
-
-class Node {
-    constructor(x, y, index, width=squareWidth, color=defaultNodeColor){
-        this.x = x;
-        this.y = y;
-        this.index = index;
-        this.width = width;
-        this.color = color;
-        this.reachableNodes = [];
-        this.parent = null;
-        this.currSmallestDistance = 0;
-    }
-
-    setColor(color){
-        this.color = color;
-    }
-
-    addNeighbour(node){
-        this.reachableNodes.push([node, this.calculateWeight(this, node)]);       
-    }
-
-    resetReachbleNodes(){
-        this.reachableNodes = [];
-    }
-
-    //calculates the weight of the edge between node1 and node 2 based on their color.
-    calculateWeight(node1, node2) {
-        
-        console.log("Calculating weight");
-        //the weight between two nodes is their difference in brightness 
-        var node1Brightness = rgbToLuma(node1.getColorAsRGB());
-        var node2Brightness = rgbToLuma(node2.getColorAsRGB());
-        /*
-        var weightOfNodes = (255 + (node1Brightness - node2Brightness)) / 2;
-        console.log(weightOfNodes);
-        return weightOfNodes;
-        */
-       return node1Brightness - node2Brightness;
-    }
-
-
-
-    getColorAsRGB(){
-        //source  : https://stackoverflow./questions/5623838/rgb-to-hex-and-hex-to-rgb
-        var result = /^#?([a-f\d]{2})([a-f\dcom]{2})([a-f\d]{2})$/i.exec(this.color);
-        return result ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16)
-        } : null;
-    }
-
-
-    getReachableNodes(){
-        return this.reachableNodes;
-    }
-
-    setParent(node){
-        this.parent = node;
-    }
-
-    draw(){
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.width, this.width);
-    }
-};
 
 
 
@@ -161,8 +71,12 @@ var runDemo = false;
 function setupGrid(){
     grid = [];
 
-    var squaresPerRow =  Math.floor((canvas.width - squareSpacing) / (squareWidth + squareSpacing));
-    var amountSquareRows = Math.floor((canvas.height - squareSpacing) / (squareWidth + squareSpacing));
+    var squaresPerRow =  Math.floor((canvas.width / ratio - squareSpacing) / (squareWidth + squareSpacing));
+    var amountSquareRows = Math.floor((canvas.height / ratio - squareSpacing) / (squareWidth + squareSpacing));
+;
+    console.log("Squares per row :" + squaresPerRow);
+    console.log("Amount rows : " + amountSquareRows);
+    console.log("X, Y first square : " + (squareSpacing + 0 * (squareWidth + squareSpacing)) + ", " + (squareSpacing + 0 * (squareWidth + squareSpacing)));
 
     var indexCounter = 0;
     for (rows = 0; rows < amountSquareRows; rows++){
@@ -217,12 +131,7 @@ function draw(){
 
 }
 
-function changeGridSize(multiplier){
-    squareWidth = multiplier * (defaultSquareWidth) + (multiplier - 1) * squareSpacing;
-    canvas.width = getDesiredCanvasDimension(originalCanvasWidth);
-    canvas.height = getDesiredCanvasDimension(originalCanvasHeight);
-    setupGrid();
-}
+
 
 setupGrid();
 draw();
@@ -275,21 +184,20 @@ function doAlgorithmStepBFS(){
                 }
 
                 neighbourNode.setParent(currNode);
-                neighbourNode.color = queuedColor;
+                neighbourNode.setQueued(true);
                 queue.push(neighbourNode);
             }
         }
         if (currNode.color != startPointColor){
-            currNode.color = visited;
+            currNode.setVisited(true);
         }
     }
 }
 function isToBeExplored(node){
-    if (node.color == defaultNodeColor || node.color == finishPointColor) {
-        console.log("Exploring node color : " + node.color);
+    if (node.visited == false && node.queued == false && node.color == defaultNodeColor
+        || node.visited == false && node.queued == false && node.color == finishPointColor){
         return true;
-    }    
-    console.log("NOT exploring node color : " + node.color);
+    }
     return false;
 }
 
@@ -335,32 +243,28 @@ function doAlgorithmStepDijkstra(){
                 }
 
                 //if we find a queued node, we check if the distance is now cheaper, if yes, we update it.
-                if (neighbourNode.color == queuedColor){
+                if (neighbourNode.queued){
                     newDistance = currNode.currSmallestDistance + currNode.calculateWeight(currNode, neighbourNode);
                     if (newDistance < neighbourNode.currSmallestDistance){
                         neighbourNode.parent = currNode;
                         pq.changePriority(neighbourNode, newDistance);
                     }
                 } else{
-                    neighbourNode.currSmallestDistance = weightToNeighbour + pqElement.priority;
+                    neighbourNode.currSmallestDistance = weightToNeighbour + pqElement.priority + 1;
                     neighbourNode.setParent(currNode);
-                    neighbourNode.color = queuedColor;
+                    neighbourNode.setQueued(true);
                     pq.enqueue(neighbourNode, neighbourNode.currSmallestDistance);
                 }
-                
-
-
-                
             }
         }
         if (currNode.color != startPointColor){
-            currNode.color = visited;
+            currNode.setVisited(true);
         }
     }
 }
 
 function exploreNode(node){
-    if (node.color == visited || node.color == startPointColor || node.color == obstacleColor){
+    if (node.visited || node.color == startPointColor || node.color == obstacleColor){
         return false;
     }
     return true;
@@ -382,7 +286,7 @@ function isGoalNode(node){
 
 function drawPathBackwards(){
     if (finishNode != null){
-        finishNode.color = pathColor;
+        finishNode.setPathNode(true);
         finishNode = finishNode.parent;
     }
 }
@@ -456,16 +360,7 @@ function setFinishingPosition(coordinates){
     goalNode.color = finishPointColor;
 }
 
-function getMousePositionOnCanvas(event){
-    var rect = canvas.getBoundingClientRect(), // abs. size of element
-    scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for x
-    scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for y
 
-    return {
-        x: (event.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
-        y: (event.clientY - rect.top) * scaleY     // been adjusted to be relative to element
-    }
-}
 
 function mapMouseCoordinateToGridSquare(x, y){
     squareColumn = Math.floor(x / (squareWidth + squareSpacing))
@@ -530,12 +425,13 @@ function changeDrawingMode(newDrawingMode, id){
 
 //------------------------------------------------------------------------------------------Listener 
 
+/*
 document.querySelector('#squareSizeSlider').addEventListener('change', function(){
     changeGridSize(parseInt(document.querySelector('#squareSizeSlider').value, 10));
     setupGrid();
     draw();
 }, false);
-
+*/
 
 
 //set the starting button
@@ -574,10 +470,28 @@ document.querySelector('#calculate').onclick = function(){
     //see way down
 }
 
+function resetAlgorithm(){
+    //setupGraph();
+    //doAlgorithm = false;
+    doAlgorithm = false;
+    executeAlgorithm = false;
+    algorithmFinished = false;
+    executeAlgorithm = false;
+    
+    for (rows = 0; rows < grid.length; rows++){
+        for (columns = 0; columns < grid[rows].length; columns++){
+            var node = grid[rows][columns];
+            node.resetStates();
+        }
+    }
+}
 
 document.querySelector('#clear').onclick = function(){
-    setupGrid();
-    doAlgorithm = false;
+    resetAlgorithm();
+    buildGraph();
+}
+
+document.querySelector('#resetAlgorithm').onclick = function(){
     resetAlgorithm();
 }
 

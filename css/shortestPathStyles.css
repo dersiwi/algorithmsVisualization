@@ -1,9 +1,10 @@
 #canvas{
 
 /*height="440" width="660"*/
-height: 40%;
-width: 60%;
-margin:auto;
+    height: 40%;
+    width: 60%;
+    margin:auto;
+    object-fit:contain;
 }
 
 #canvasWrapper{

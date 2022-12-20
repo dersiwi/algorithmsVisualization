@@ -1,5 +1,7 @@
 //aCOLOR PICKER 
 
+const diditsAfterDecrimal = 2;
+
 const colorPickerOne = document.querySelector('#squareOneColor');
 const colorPickerTwo = document.querySelector('#squareTwoColor');
 const c1Text = document.querySelector('#colorOneInText');
@@ -27,8 +29,10 @@ function setNewWeight(){
     //calculate weight between the two colors 
     n1 = new Node(x=0, y=0, index=0, width=0, color=colorOne);
     n2 = new Node(x=0, y=0, index=0, width=0, color=colorTwo);
-    document.querySelector("#weightDisplay").innerHTML = Math.floor(n1.calculateWeight(n1, n2));
+    var weight = Number(n1.calculateWeight(n1, n2));
+    document.querySelector("#weightDisplay").innerHTML = weight.toFixed(diditsAfterDecrimal);
     c1Text.style.color = colorOne;
     c2Text.style.color = colorTwo;
-    document.quer
+    console.log("Color one : " + colorOne);
+    console.log("Color two : " + colorTwo);
 }

@@ -101,10 +101,14 @@
                            
                         </div>
                     </div>
+                    <!--
+                    ------------------------------Disabled, maybe in the future. 
                     <form id="sliderData">
                         <label>Adjust Grid size</label>
                         <input id="squareSizeSlider" title="Sqzare size" type="range" min="1" max="10" value="2">
                     </form>
+                    -->
+
 
                     <div id="canvasWrapper">
                         <canvas id="canvas"></canvas>
@@ -128,23 +132,28 @@
                             <button id="weightDisplay"></button>
                             <input type="color" id="squareTwoColor" name="head" value="#000000">
                         </div>
-                   </div>
-                   <div class="paragraph">
-                        <p class="whiteText">
-                            The number between the two color-pickers resembles the difficulty of traveling from <span id="colorOneInText">color one</span> to
-                            <span id="colorTwoInText">color two</span>. <br>
-                            The higher the number, the more difficult it is to travel from the square to the next. A black sqaure cannot be enetered. <br>
-                            You could also think of this map as a <span class="headline">height map</span>, where the darkness of a color resembles the height
-                            of the square you are standing on. The number displayed in the middle would then be the altitude you'd have to cross when crossing from one 
-                            square to the next. A value of 0 is horizontal, anything smaller than 0 is going downhill (easy) and anything greater 0 is going uphill (difficult). 
-                        </p>
-                   </div>
+                    </div>
+                    <div class="paragraph">
+                            <p class="whiteText">
+                                The number between the two color-pickers resembles the difficulty of traveling from <span id="colorOneInText">color one</span> to
+                                <span id="colorTwoInText">color two</span>. 
+                                The higher the number is, the more expensive it is to travel between the colors. The value for traveling cost is determined by 
+                                the difference in brightness of the two colors. Additionally, the further a square is away from the starting point, the more 
+                                expensive it is to travel to.<br>
+
+                                Notice that black squares present an absolute obstacle that cannot be passed through. Also, this function is only relevant
+                                for algorithms that actually make sense of the weight between nodes (for example <a href="https://de.wikipedia.org/wiki/Dijkstra-Algorithmus" target="_blank">dijkstra</a>) 
+                                and not purely graph traversing algorithms like <a href="https://en.wikipedia.org/wiki/Breadth-first_search" target="_blank">BFS</a>.
+                            </p>
+                    </div>
                    
 
                     
                     
 
                 </div>
+                <script src="scripts/canvasScaling.js" charset="utf-8"></script>
+                <script src="scripts/Node.js" charset="utf-8"></script>
                 <script src="scripts/PrioQueue.js" charset="utf-8"></script>
                 <script src="scripts/shortestPaths2.js" charset="utf-8"></script>
                 <script src="scripts/transitionCalculator.js" charset="utf-8"></script>

@@ -15,7 +15,7 @@
  *          See explanation of the method below. Essentially this method r
  */
 
-var colors = [obstacleColor, "#865e3c", "#e66100", "#2ec27e"];
+var colors = [obstacleColor, "#865e3c", "#613583", "#2ec27e"];
 var nodesAndColors = []; // contians a list of [node, color] which is iterated through by the demo
 const maxRadius = Math.floor(grid.length / 3);
 var currentStage = 0;
@@ -25,7 +25,6 @@ var finishPointCoordinate = null;
 
 
 document.querySelector('#startDemo').onclick = function(){
-    setupGrid();
     setupGraph();
 
     setupRandomDemo();
@@ -64,24 +63,24 @@ function setupDemo(){
     startingNode = grid[demoCentercircle[0]][demoCentercircle[1]];
     bfsqueue.push(startingNode);
     nodesAndColors.push([startingNode, colors[0]]);
-    startingNode.color = visited;
     radiusCounter = 0;
     layerCounter = 0;
     while (radiusCounter < radius){
         var currNode = bfsqueue.shift();
         var neighbours = currNode.getReachableNodes();
+
         for (i = 0; i < neighbours.length; i++){
             neighbourNode = neighbours[i][0];
-            if (neighbourNode.color != visited){
+            if (neighbourNode.color != visited && neighbourNode.color != queuedColor){
                 bfsqueue.push(neighbourNode);
                 nodesAndColors.push([neighbourNode, colors[radiusCounter]]);
-                neighbourNode.color = visited;
+                neighbourNode.color = queuedColor;
                 layerCounter++;
             }
         }
+        currNode.color = visited;
         
-        
-        if (Math.floor(Math.pow(2, radiusCounter + 1)) <= layerCounter){
+        if (Math.floor(Math.pow(2, radiusCounter + 2)) <= layerCounter){
             layerCounter = 0;
             radiusCounter++;
         }

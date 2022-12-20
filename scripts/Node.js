@@ -1,5 +1,5 @@
 
-
+const brightnessDimmer = 2/255;
 class Node {
     constructor(x, y, index, width=squareWidth, color=defaultNodeColor){
         this.x = x;
@@ -8,9 +8,9 @@ class Node {
         this.width = width;
         this.color = color;
         this.reachableNodes = [];
+
         this.parent = null;
         this.currSmallestDistance = 0;
-
         this.visited = false;
         this.queued = false;
         this.isPathNode = false;
@@ -56,20 +56,41 @@ class Node {
         this.isPathNode = boolean;
     }
 
+    resetStates(){
+        this.visited = false;
+        this.queued = false;
+        this.isPathNode = false;
+        this.parent = null;
+        this.currSmallestDistance = 0;
+    }
+
 
     //calculates the weight of the edge between node1 and node 2 based on their color.
     calculateWeight(node1, node2) {
+        
         
         console.log("Calculating weight");
         //the weight between two nodes is their difference in brightness 
         var node1Brightness = rgbToLuma(node1.getColorAsRGB());
         var node2Brightness = rgbToLuma(node2.getColorAsRGB());
+        
         /*
+
+        Method 1 ; 
+
         var weightOfNodes = (255 + (node1Brightness - node2Brightness)) / 2;
         console.log(weightOfNodes);
-        return weightOfNodes;
+        return weightOfNodes * brightnessDimmer;
         */
-       return node1Brightness - node2Brightness;
+
+        /**
+        Method 2 ;
+
+        return (node1Brightness - node2Brightness) ;
+
+         */
+        
+       return Math.abs(node1Brightness - node2Brightness) * brightnessDimmer;
     }
 
 

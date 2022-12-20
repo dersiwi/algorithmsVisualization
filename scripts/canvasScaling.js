@@ -40,10 +40,10 @@ function getMousePositionOnCanvas(event){
     var rect = canvas.getBoundingClientRect(), // abs. size of element
     scaleX = canvas.width / rect.width,    // relationship bitmap vs. element for x
     scaleY = canvas.height / rect.height;  // relationship bitmap vs. element for y
-    console.log("ScaleX, Scale Y : " + (canvas.width / rect.width) + " , " + (canvas.height / rect.height));
+    //console.log("ScaleX, Scale Y : " + (canvas.width / rect.width) + " , " + (canvas.height / rect.height));
     calcX = (event.clientX  - rect.left) * scaleX / ratio;
     calcY = (event.clientY - rect.top) * scaleY / ratio;
-    console.log("x : " + calcX + "\n" + "y : " + calcY);
+    //console.log("x : " + calcX + "\n" + "y : " + calcY);
     return {
         x: calcX ,   // scale mouse coordinates after they have
         y: calcY    // been adjusted to be relative to element

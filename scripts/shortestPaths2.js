@@ -71,10 +71,11 @@ var runDemo = false;
 function setupGrid(){
     grid = [];
 
-    var squaresPerRow =  Math.floor((canvas.clientWidth / ratio - squareSpacing) / (squareWidth + squareSpacing));
-    var amountSquareRows = Math.floor((canvas.clientHeight / ratio - squareSpacing) / (squareWidth + squareSpacing));
+    var squaresPerRow =  Math.floor((canvas.width / ratio - squareSpacing) / (squareWidth + squareSpacing));
+    var amountSquareRows = Math.floor((canvas.height / ratio - squareSpacing) / (squareWidth + squareSpacing));
 ;
     console.log("Squares per row :" + squaresPerRow);
+    console.log("Amount rows : " + amountSquareRows);
     console.log("X, Y first square : " + (squareSpacing + 0 * (squareWidth + squareSpacing)) + ", " + (squareSpacing + 0 * (squareWidth + squareSpacing)));
 
     var indexCounter = 0;
@@ -249,7 +250,7 @@ function doAlgorithmStepDijkstra(){
                         pq.changePriority(neighbourNode, newDistance);
                     }
                 } else{
-                    neighbourNode.currSmallestDistance = weightToNeighbour + pqElement.priority;
+                    neighbourNode.currSmallestDistance = weightToNeighbour + pqElement.priority + 1;
                     neighbourNode.setParent(currNode);
                     neighbourNode.setQueued(true);
                     pq.enqueue(neighbourNode, neighbourNode.currSmallestDistance);
@@ -424,12 +425,13 @@ function changeDrawingMode(newDrawingMode, id){
 
 //------------------------------------------------------------------------------------------Listener 
 
+/*
 document.querySelector('#squareSizeSlider').addEventListener('change', function(){
     changeGridSize(parseInt(document.querySelector('#squareSizeSlider').value, 10));
     setupGrid();
     draw();
 }, false);
-
+*/
 
 
 //set the starting button
@@ -468,10 +470,28 @@ document.querySelector('#calculate').onclick = function(){
     //see way down
 }
 
+function resetAlgorithm(){
+    //setupGraph();
+    //doAlgorithm = false;
+    doAlgorithm = false;
+    executeAlgorithm = false;
+    algorithmFinished = false;
+    executeAlgorithm = false;
+    
+    for (rows = 0; rows < grid.length; rows++){
+        for (columns = 0; columns < grid[rows].length; columns++){
+            var node = grid[rows][columns];
+            node.resetStates();
+        }
+    }
+}
 
 document.querySelector('#clear').onclick = function(){
-    setupGrid();
-    doAlgorithm = false;
+    resetAlgorithm();
+    buildGraph();
+}
+
+document.querySelector('#resetAlgorithm').onclick = function(){
     resetAlgorithm();
 }
 
